@@ -23,4 +23,4 @@ for (i = 0; i < giorni_settimana.length; i++) {
 }
 
 console.log("---------------------------------");
-console.log("Ho " + mele + " e mele e non posso più mangiarle")
+console.log("Ho " + mele + " e mele e non posso più mangiarle");
