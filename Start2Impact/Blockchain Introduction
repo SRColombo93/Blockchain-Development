@@ -8,6 +8,13 @@ contract Fundraising {
     uint public donators;
     bool public isClosed;
 
+    // Evento per tracciare le donazioni
+    event donationReceived(address donor, uint amount);
+    // Evento per tracciare il completamento della raccolta
+    event fundraisingClosed(uint totalAmount, bool goalReached);
+    // Evento per tracciare i prelievi
+    event fundsWithdrawn(uint amount);
+
     constructor (uint _goalAmount) {
         owner = msg.sender;
         goalAmount = _goalAmount;
@@ -20,17 +27,24 @@ contract Fundraising {
         // Add the donated amount to the donated amount
         donatedAmount += msg.value;
         donators++;
-
-        // If we have reached the goal, we close the collection
+        
+        // Emette un evento per tracciare la donazione
+        emit donationReceived(msg.sender, msg.value);
+        
+        // If we have reached the goal, we close the fundraising
         if (donatedAmount >= goalAmount) {
             isClosed = true;
         }
     }
 
     function withdraw() public {
+       
         // Only the owner can withdraw
         require(owner == msg.sender, "Only the owner can withdraw");
+        
         // Transfer all remaining balance to the owner
         payable(owner).transfer(address(this).balance);
-    }  
+
+        emit fundsWithdrawn(msg.value);
+    }
 }
