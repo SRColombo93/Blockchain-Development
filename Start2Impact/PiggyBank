@@ -17,8 +17,8 @@ Nota bene: per poter inviare Ethereum verso un contratto, è necessario aggiunge
 pragma solidity ^0.8.0;
 
 contract PiggyBank {
-    uint totalBalance;
-    address owner;
+    uint public totalBalance;
+    address public owner;
 
     constructor() {
         owner = msg.sender;
@@ -26,7 +26,7 @@ contract PiggyBank {
 
     function donate() public payable {
         // Add the donated amount to the total balance
-        totalBalance = totalBalance + msg.value;
+        totalBalance += msg.value;
     }
 
     function withdraw() public {
