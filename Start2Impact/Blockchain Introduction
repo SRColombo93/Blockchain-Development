@@ -1,0 +1,36 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Fundraising {
+    uint public donatedAmount;
+    address public owner;
+    uint public goalAmount;
+    uint public donators;
+    bool public isClosed;
+
+    constructor (uint _goalAmount) {
+        owner = msg.sender;
+        goalAmount = _goalAmount;
+    }
+
+    function donate() public payable {
+        require(!isClosed, "Fundraising is now closed, goal reached!");
+        require(msg.value > 0, "You must donate an amount greater than 0");
+
+        // Add the donated amount to the donated amount
+        donatedAmount += msg.value;
+        donators++;
+
+        // If we have reached the goal, we close the collection
+        if (donatedAmount >= goalAmount) {
+            isClosed = true;
+        }
+    }
+
+    function withdraw() public {
+        // Only the owner can withdraw
+        require(owner == msg.sender, "Only the owner can withdraw");
+        // Transfer all remaining balance to the owner
+        payable(owner).transfer(address(this).balance);
+    }  
+}
