@@ -1,6 +1,7 @@
-1_Homework
+/* 1_Homework
 "Scrivere un codice in Javascript che mi stampi in console se, partendo dal giorno della settimana “Lunedì” che è il 1° del mese, devo mangiare una delle mie 5 mele.
 Le mele a disposizione sono 5, ne devo mangiare 1 ogni giorno ma non voglio mangiarla se è Mercoledì e devo smettere di mangiarle quando me ne rimangono 2."
+*/
 
 // Array contenente i Giorni della settimana
 const giorniSettimana = ['Lunedì', 'Martedi', 'Mercoledi', 'Giovedi', 'Venerdi', 'Sabato', 'Domenica'];
