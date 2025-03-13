@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract Fundraising {
+contract FoodFundraising {
     uint public donatedAmount;
     address public owner;
     uint public goalAmount;
@@ -31,6 +31,7 @@ contract Fundraising {
         require(msg.sender == owner, "Only the owner can call this function");
         _;
     }
+
     // Modifier to check that the fundraiser is still open
     modifier fundraisingOpen() {
         require(!isClosed, "Fundraising is now closed");
@@ -40,11 +41,12 @@ contract Fundraising {
     function donate() public payable fundraisingOpen {
         require(msg.value > 0, "You must donate an amount greater than 0");
 
-        // Add the donated amount to the donated amount
         donatedAmount += msg.value;
+
         if (donations[msg.sender] == 0) {
             donorsCount++; // Count only new unique donors
         }
+
         donations[msg.sender] += msg.value;
 
         // Record the timestamp of the donation
@@ -52,6 +54,7 @@ contract Fundraising {
 
         // Issue an event with the timestamp
         emit DonationReceived(msg.sender, msg.value, block.timestamp, donatedAmount);
+
         // If we have reached the goal, we close the fundraising
         if (donatedAmount >= goalAmount) {
             isClosed = true;
@@ -61,25 +64,32 @@ contract Fundraising {
 
     function withdraw() public onlyOwner {
         // require(msg.sender == owner, "Only the owner can withdraw");
-        // require(!isClosed, "Fundraising is already closed"); if the withdrawal should only take place after the close of the collection
         uint amount = address(this).balance;
         require(amount > 0, "No funds available");
-        // Make status changes first
+
+        isClosed = true;
+        
         emit FundsWithdrawn(owner, amount);
+        
         // Transfer the balance to the owner
         payable(owner).transfer(amount);
     }
 
-    function closeFundraising() public onlyOwner {
+   function closeFundraising() public onlyOwner {
         // require(msg.sender == owner, "Only the owner can close the fundraising");
         require(!isClosed, "Fundraising is already closed");
+        require(donatedAmount >= goalAmount, "Fundraising goal not reached yet");
+
         isClosed = true;
+
         emit FundraisingClosed(donatedAmount, donorsCount, donatedAmount >= goalAmount);
-}
+    }
+
     // Function to check if the goal has been reached
     function isGoalReached() public view returns (bool) {
         return donatedAmount >= goalAmount;
     }
+
     // Function that returns the current contract balance
     function getContractBalance() public view returns (uint) {
         return address(this).balance;
